@@ -1,4 +1,4 @@
-image: node:latest
+image: node:18.17
 
 # allow caching for faster deployment
 cache:
