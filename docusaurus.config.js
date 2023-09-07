@@ -11,7 +11,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://guerrilla.dev',
+  url: 'https://guerrilla-docs.vercel.app/',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -45,7 +45,7 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://gitlab.com/moxa/qa/product/router/guerrilla-docs',
+          editUrl: 'https://github.com/jianan1104/guerrilla-docs',
           showLastUpdateAuthor: true,
           routeBasePath: '/', // Serve the docs at the site's root
           // breadcrumbs: false,
