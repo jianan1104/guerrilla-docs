@@ -1,0 +1,248 @@
+
+
+
+import DocCardList from '@theme/DocCardList';
+
+
+# Installation for Windows
+
+## Requirements
+To running Guerrilla we first need to have an available
+virtual machine system, which Guerrilla will use to interact with DUTs.
+
+- 3+ Physical Network Interface 
+- [Git](https://git-scm.com/)
+- [Vagrant 2.2.5+](https://developer.hashicorp.com/vagrant/downloads?product_intent=vagrant)
+- [VMWare Workstation 15+](https://www.vmware.com/tw/products/workstation-pro/workstation-pro-evaluation.html) or [VirtualBox](https://www.virtualbox.org/)
+
+
+### Install VMWare Workstation Pro or VirtualBox
+
+Use [VMWare Workstation Pro](https://www.vmware.com/tw/products/workstation-pro/workstation-pro-evaluation.html) or [VirtualBox](https://www.virtualbox.org/) to create virtual machine instance.
+
+:::info What should I choose? 🧐 
+It is recommended to use VMware for configuration, the operation interface is more friendly. 
+:::
+
+<DocCardList items={[
+  {
+    type: 'link',
+    href: 'https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7_windows_amd64.msi',
+    label: 'VMware Workstation Pro',
+    description: "Version: 16.2.2",
+    customProps: {
+      icon: "vmware",
+      col: "col--6",
+    }
+  },
+  {
+    type: 'link',
+    href: 'https://download.virtualbox.org/virtualbox/7.0.10/VirtualBox-7.0.10-158379-Win.exe',
+    label: 'VirtualBox',
+    description: "Version: 7.0.10",
+    customProps: {
+      icon: "virtualbox",
+      col: "col--6",
+    }
+  },
+]} />
+
+<hr class="solid" />
+
+### Install Vagrant 
+
+Use Vagrant to manage virtual machine instances.
+
+<DocCardList items={[
+  {
+    type: 'link',
+    href: 'https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7_windows_amd64.msi',
+    label: 'Vagrant',
+    description: "Version: 2.3.7",
+    customProps: {
+      icon: "vagrant",
+      col: "col--6"
+    }
+  },
+  {
+    type: 'link',
+    href: 'https://releases.hashicorp.com/vagrant-vmware-utility/1.0.22/vagrant-vmware-utility_1.0.22_windows_amd64.msi',
+    label: 'VMware Utility for Vagrant',
+    description: "Version: 1.0.22, only for VMWare",
+    customProps: {
+      icon: "tool",
+      col: "col--6"
+    }
+  }
+]} />
+
+:::note
+Let you know, if you use **VirtualBox**, you do not need the **VMware Utility**. 
+:::
+
+After the installation, turn on the terminal and test whether the Vagrant operates normally
+
+```plain
+$ vagrant
+
+Usage: vagrant [options] <command> [<args>]
+
+    -h, --help                       Print this help.
+
+Common commands:
+     autocomplete    manages autocomplete installation on host
+     box             manages boxes: installation, removal, etc.
+     cloud           manages everything related to Vagrant Cloud
+     destroy         stops and deletes all traces of the vagrant machine
+     global-status   outputs status Vagrant environments for this user
+     halt            stops the vagrant machine
+     help            shows the help for a subcommand
+     init            initializes a new Vagrant environment by creating a Vagrantfile
+     login           
+     mutate          
+     ...
+```
+
+It looks all great.
+
+#### Optional
+If you choose **VMware**, please install the Vagrant plugin of VMware.
+
+```bash
+vagrant plugin install vagrant-vmware-desktop
+```
+
+
+## Setup Virtual Machine Instances
+
+### Use Vagrant to Create VMs
+
+1. Clone the enviroment setting repository
+```bash
+$ git clone --branch vagrant https://gitlab.com/moxa/qa/product/router/env_configuration
+```
+```bash
+$ cd env_configuration
+$ dir -l        
+
+-rw-rw-r-- 1 kane kane 3609  八  17 10:38 bot.sh
+-rw-rw-r-- 1 kane kane  552  九   8 16:57 vagrantfile
+```
+
+You will see the setting file `bot.sh` and installed script of Vagrant `vagrantfile`.
+
+```js title="env_configuration/vagrantfile" showLineNumbers
+Vagrant.configure("2") do |config|
+  
+  def define_guerrilla_vm(config, vm_name)
+    config.vm.define vm_name do |guerrilla|
+      guerrilla.vm.box = "kalilinux/rolling"
+      
+
+      guerrilla.ssh.username = "vagrant"
+      guerrilla.ssh.password = "vagrant"
+      
+      guerrilla.vm.hostname = vm_name
+      
+      guerrilla.vm.provision "shell", path: "bot.sh"
+    end
+  end
+
+  # Define the VMs
+  define_guerrilla_vm(config, "guerrilla_exec")
+  define_guerrilla_vm(config, "guerrilla_host_1")
+  define_guerrilla_vm(config, "guerrilla_host_2")
+
+end
+```
+
+#### Explanation of the Vagrantfile
+
+- **Definition of Virtual Machines**: This file defines three virtual machines: guerrilla_exec, guerrilla_host_1, and guerrilla_host_2.
+
+- **Operating System Image**: Each virtual machine utilizes the "kalilinux/rolling" image. This indicates that each VM is installed with the rolling version of Kali Linux.
+
+- **SSH Configuration**: All virtual machines use the same SSH login credentials, connecting with the username "vagrant" and the password "vagrant".
+
+- **Hostname**: Each virtual machine is set with the same hostname "guerrilla".
+
+- **Provisioning Script**: Upon startup of each VM, a script named "bot.sh" is executed. This script might be for setting up or deploying certain software or services.
+
+- **Other Settings**: There are some commented-out configurations in the file, such as setting the version of the VM and port forwarding. These settings can be activated by uncommenting them if needed.
+
+In summary, this `Vagrantfile` is primarily used for automating the setup and deployment of three virtual machines running Kali Linux, with the `bot.sh` script executed on each.
+
+
+```bash title="env_configuration/bot.sh" showLineNumbers
+#!/bin/bash
+echo "-*- Author : Aaron KC Wu <aaronkc.wu@moxa.com> -*-"
+echo "-*- Version : v.1.0.0 -*-"
+echo "--------------- Add the Internal and External Domain Name ----------------"
+# Clear resolv.conf
+> /etc/resolv.conf
+# Add the internal and external DNS Server
+echo nameserver 10.123.200.11 >> /etc/resolv.conf
+echo nameserver 10.123.200.12 >> /etc/resolv.conf
+echo nameserver 8.8.8.8 >> /etc/resolv.conf
+...
+...
+...
+```
+This script initializes server configurations, including network settings, timezone, SSH setup, installs Docker, Java, etc., and configures TFTP services.
+
+#### Start to run VMs
+
+- VMWare Workstation Pro
+```bash
+$ vagrant up --provider vmware_desktop guerrilla_exec guerrilla_host_1 guerrilla_host_2
+```
+
+- VirtualBox
+```bash
+$ vagrant up --provider virtualbox guerrilla_exec guerrilla_host_1 guerrilla_host_2
+```
+
+```bash
+$ vagrant global-status
+
+id       name             provider state   directory                             
+---------------------------------------------------------------------------------
+a01447c  guerrilla_host_2 vmware_desktop running /home/kane/projects/Env_Configuration 
+6401ca8  guerrilla_exec   vmware_desktop running /home/kane/projects/Env_Configuration 
+6656e97  guerrilla_host_1 vmware_desktop running /home/kane/projects/Env_Configuration 
+```
+
+### Create VMs Manually
+
+Here's 2 ways for create manually.
+
+#### From ISO Image
+
+- Download Kali Linux ISO Image
+    - https://www.kali.org/get-kali/#kali-installer-images
+- Follow the tutorial to create virtual machine
+    - https://kb.vmware.com/s/article/1018415
+
+#### From Pre-built Virtual Machine
+
+- Download Pre-built Virtual Machine
+    - https://www.kali.org/get-kali/#kali-virtual-machines
+- Follow the tutorial to create virtual machine
+    - https://www.kali.org/docs/virtualization/import-premade-vmware/
+
+#### Excute Script in Each VM
+
+Enter VM and open terminal, and execute script
+
+```bash
+$ git clone --branch vagrant https://gitlab.com/moxa/qa/product/router/env_configuration
+```
+```bash
+$ cd env_configuration
+```
+```bash
+$ chmod +x bot.sh
+```
+```bash
+$ sh bot.sh -y
+```

@@ -39,11 +39,25 @@ const sidebars = {
       collapsed: true,
       items: [
         {
-          type: "doc",
-          id: "getting-started/installation",
+          type: "category",
           label: "Installation",
-          className: "docpage-sidebar-item",
-        },
+          className: "homepage-sidebar-item",
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              id: "getting-started/installation/windows",
+              label: "Windows",
+              className: "docpage-sidebar-item",
+            },
+            {
+              type: "doc",
+              id: "getting-started/installation/linux",
+              label: "Linux",
+              className: "docpage-sidebar-item",
+            }
+          ],
+        }
       ],
     },
     
