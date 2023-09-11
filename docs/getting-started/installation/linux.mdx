@@ -221,22 +221,23 @@ Vagrant.configure("2") do |config|
     config.vm.define vm_name do |guerrilla|
       guerrilla.vm.box = "kalilinux/rolling"
       
-
       guerrilla.ssh.username = "vagrant"
       guerrilla.ssh.password = "vagrant"
       
-      guerrilla.vm.hostname = vm_name
+      # 修改主機名，確保遵守命名規則
+      guerrilla.vm.hostname = "guerrilla-" + vm_name.gsub('_', '-')
       
       guerrilla.vm.provision "shell", path: "bot.sh"
     end
   end
 
-  # Define the VMs
-  define_guerrilla_vm(config, "guerrilla_exec")
-  define_guerrilla_vm(config, "guerrilla_host_1")
-  define_guerrilla_vm(config, "guerrilla_host_2")
+  # 定義虛擬機
+  define_guerrilla_vm(config, "exec")
+  define_guerrilla_vm(config, "host_1")
+  define_guerrilla_vm(config, "host_2")
 
 end
+
 ```
 
 #### Explanation of the Vagrantfile

@@ -57,6 +57,32 @@ const sidebars = {
               className: "docpage-sidebar-item",
             }
           ],
+        },
+        {
+          type: "category",
+          label: "Setup Network Topology",
+          className: "homepage-sidebar-item",
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              id: "getting-started/setup-topology/overview",
+              label: "Overview",
+              className: "docpage-sidebar-item",
+            },
+            {
+              type: "doc",
+              id: "getting-started/setup-topology/vmware",
+              label: "Setup for VMWare",
+              className: "docpage-sidebar-item",
+            },
+            {
+              type: "doc",
+              id: "getting-started/setup-topology/qemu-kvm",
+              label: "Setup for QEMU/KVM",
+              className: "docpage-sidebar-item",
+            }
+          ],
         }
       ],
     },

@@ -1,0 +1,12 @@
+# Network Topology
+
+![Image](https://i.imgur.com/AsqoPFB.png)
+
+:::info
+We need at least three NIC for the testbed. One is for executor to access the DUT and the other two are for simulating the traffic.
+Totally we have three subnet:
+- Control Subnet: It’s for the communication between executor, host1 and host2.
+(192.168.118.0/24)
+- RD Network Subnet: Control Subnet (192.168.118.0/24) will be translated to 10.123.39.0
+- Testbed Subnet: LAN or WAN subnet (192.168.127.0/24, 192.168.128..0/24) will be set if the test requires.
+:::
