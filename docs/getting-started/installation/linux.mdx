@@ -190,8 +190,101 @@ sudo apt-get install -y qemu libvirt-daemon-system ebtables libguestfs-tools \
         vagrant ruby-fog-libvirt
 ```
 
-### Install the latest release of vagrant-libvirt
+### Install  vagrant-libvirt
 
 ```bash
 vagrant plugin install vagrant-libvirt
+```
+
+## Setup Virtual Machine Instances
+
+### Use Vagrant to Create VMs
+
+1. Clone the enviroment setting repository
+```bash
+$ git clone --branch vagrant https://gitlab.com/moxa/qa/product/router/env_configuration
+```
+```bash
+$ cd env_configuration
+$ ls -l        
+
+-rw-rw-r-- 1 kane kane 3609  八  17 10:38 bot.sh
+-rw-rw-r-- 1 kane kane  552  九   8 16:57 vagrantfile
+```
+
+You will see the setting file `bot.sh` and installed script of Vagrant `vagrantfile`.
+
+```js title="env_configuration/vagrantfile" showLineNumbers
+Vagrant.configure("2") do |config|
+  
+  def define_guerrilla_vm(config, vm_name)
+    config.vm.define vm_name do |guerrilla|
+      guerrilla.vm.box = "kalilinux/rolling"
+      
+
+      guerrilla.ssh.username = "vagrant"
+      guerrilla.ssh.password = "vagrant"
+      
+      guerrilla.vm.hostname = vm_name
+      
+      guerrilla.vm.provision "shell", path: "bot.sh"
+    end
+  end
+
+  # Define the VMs
+  define_guerrilla_vm(config, "guerrilla_exec")
+  define_guerrilla_vm(config, "guerrilla_host_1")
+  define_guerrilla_vm(config, "guerrilla_host_2")
+
+end
+```
+
+#### Explanation of the Vagrantfile
+
+- **Definition of Virtual Machines**: This file defines three virtual machines: guerrilla_exec, guerrilla_host_1, and guerrilla_host_2.
+
+- **Operating System Image**: Each virtual machine utilizes the "kalilinux/rolling" image. This indicates that each VM is installed with the rolling version of Kali Linux.
+
+- **SSH Configuration**: All virtual machines use the same SSH login credentials, connecting with the username "vagrant" and the password "vagrant".
+
+- **Hostname**: Each virtual machine is set with the same hostname "guerrilla".
+
+- **Provisioning Script**: Upon startup of each VM, a script named "bot.sh" is executed. This script might be for setting up or deploying certain software or services.
+
+- **Other Settings**: There are some commented-out configurations in the file, such as setting the version of the VM and port forwarding. These settings can be activated by uncommenting them if needed.
+
+In summary, this `Vagrantfile` is primarily used for automating the setup and deployment of three virtual machines running Kali Linux, with the `bot.sh` script executed on each.
+
+
+```bash title="env_configuration/bot.sh" showLineNumbers
+#!/bin/bash
+echo "-*- Author : Aaron KC Wu <aaronkc.wu@moxa.com> -*-"
+echo "-*- Version : v.1.0.0 -*-"
+echo "--------------- Add the Internal and External Domain Name ----------------"
+# Clear resolv.conf
+> /etc/resolv.conf
+# Add the internal and external DNS Server
+echo nameserver 10.123.200.11 >> /etc/resolv.conf
+echo nameserver 10.123.200.12 >> /etc/resolv.conf
+echo nameserver 8.8.8.8 >> /etc/resolv.conf
+...
+...
+...
+```
+This script initializes server configurations, including network settings, timezone, SSH setup, installs Docker, Java, etc., and configures TFTP services.
+
+#### Start to run VMs
+
+```bash
+$ vagrant up guerrilla_exec guerrilla_host_1 guerrilla_host_2
+```
+
+```bash
+$ vagrant global-status
+
+id       name             provider state   directory                             
+---------------------------------------------------------------------------------
+a01447c  guerrilla_host_2 libvirt running /home/kane/projects/Env_Configuration 
+6401ca8  guerrilla_exec   libvirt running /home/kane/projects/Env_Configuration 
+6656e97  guerrilla_host_1 libvirt running /home/kane/projects/Env_Configuration 
 ```
