@@ -78,7 +78,7 @@ const sidebars = {
             },
             {
               type: "doc",
-              id: "getting-started/setup-topology/qemu-kvm",
+              id: "getting-started/setup-topology/QEMU-KVM",
               label: "Setup for QEMU/KVM",
               className: "docpage-sidebar-item",
             }
