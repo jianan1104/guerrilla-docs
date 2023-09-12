@@ -171,7 +171,9 @@ Enter each VM and setup network configuration.
 $ nmcli con add con-name eth0 ifname eth0 type ethernet
 
 # 設定靜態 IP
+# highlight-next-line
 $ nmcli con modify eth0 ipv4.addresses 192.168.57.9/24
+# highlight-next-line
 $ nmcli con modify eth0 ipv4.gateway 192.168.57.2
 $ nmcli con modify eth0 ipv4.method manual
 
@@ -184,6 +186,7 @@ $ nmcli con up eth0
 $ nmcli con add con-name eth1 ifname eth1 type ethernet
 
 # 設定靜態 IP
+# highlight-next-line
 $ nmcli con modify eth1 ipv4.addresses 192.168.127.9/24
 $ nmcli con modify eth1 ipv4.method manual
 
@@ -216,7 +219,9 @@ $ sudo systemctl restart NetworkManager
 $ nmcli con add con-name eth0 ifname eth0 type ethernet
 
 # 設定靜態 IP
-$ nmcli con modify eth0 ipv4.addresses 192.168.57.10/24
+# highlight-next-line
+$ nmcli con modify eth0 ipv4.addresses 192.168.57.11/24
+# highlight-next-line
 $ nmcli con modify eth0 ipv4.gateway 192.168.57.2
 $ nmcli con modify eth0 ipv4.method manual
 
@@ -229,7 +234,8 @@ $ nmcli con up eth0
 $ nmcli con add con-name eth1 ifname eth1 type ethernet
 
 # 設定靜態 IP
-$ nmcli con modify eth1 ipv4.addresses 192.168.128.10/24
+# highlight-next-line
+$ nmcli con modify eth1 ipv4.addresses 192.168.127.11/24
 $ nmcli con modify eth1 ipv4.method manual
 
 # 啟動連線
@@ -261,7 +267,9 @@ $ sudo systemctl restart NetworkManager
 $ nmcli con add con-name eth0 ifname eth0 type ethernet
 
 # 設定靜態 IP
+# highlight-next-line
 $ nmcli con modify eth0 ipv4.addresses 192.168.57.10/24
+# highlight-next-line
 $ nmcli con modify eth0 ipv4.gateway 192.168.57.2
 $ nmcli con modify eth0 ipv4.method manual
 
@@ -274,6 +282,7 @@ $ nmcli con up eth0
 $ nmcli con add con-name eth1 ifname eth1 type ethernet
 
 # 設定靜態 IP
+# highlight-next-line
 $ nmcli con modify eth1 ipv4.addresses 192.168.128.10/24
 $ nmcli con modify eth1 ipv4.method manual
 

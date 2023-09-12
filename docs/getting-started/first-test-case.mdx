@@ -1,0 +1,82 @@
+# First Test Case
+
+```bash
+Feature: Local Routing
+
+Topology:
+ +-----------------------------------------+
+ |  HOST_B------(LAN)DUT(WAN)------HOST_A  |
+ +-----------------------------------------+
+    @v2 @v3 @sanity @route @bvt @self_testing
+    Scenario:
+        Given authorize CLI of "DUT"
+        *     reload factory-default "DUT"
+        *     prepare a "HOST_A" to connect to "DUT"
+        *     prepare a "HOST_B" to connect to "DUT" 
+        *     set WAN interface on "DUT"
+        *     set LAN interface on "DUT"
+        When  set "HOST_A" ip address within "DUT"s WAN subnet
+        And   set "HOST_B" ip address within "DUT"s LAN subnet
+        And   add static route for "HOST_A" routing to "HOST_B"
+        And   add static route for "HOST_B" routing to "HOST_A"        
+        Then  "HOST_A" will ping "HOST_B" successfully
+        And   "HOST_B" will ping "HOST_A" successfully
+```
+
+
+## Enter in Executor
+
+```bash
+$ ssh vagrant@192.168.57.9
+```
+
+## Clone the Projects
+
+```bash
+$ git clone -b dev https://gitlab.com/moxa/qa/product/router/guerrilla.git
+```
+
+## Run Guerrilla in Docker
+
+```bash
+docker run --name guerrilla -dit --privileged -v //tftp://tftp -v /home/vagrant/Guerrilla:/usr/src/app/ aaronkcwu/python3.9-behave
+```
+
+```bash
+docker exec -it guerrilla bash
+```
+
+## Test First Case
+
+```bash
+$ PYTHONPATH=lib/ behave  test_suite/features_dev/route_local_route.feature --no-capture
+```
+
+## Result
+
+```bash
+--- 192.168.128.11 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 1.122/3.297/9.619/3.649 ms
+               And "HOST_B" will ping "HOST_A" successfully          # lib/steps/common.py:353 7.521s
+context.dut[DUT].disconnect()!!!!!
+
+ ---- dut log out start !!! ----
+
+ ---- dut back to main !!! ----
+command:  
+{'matched': True, 'pattern': '\\n[^\\n]+[^\\)]# ', 'data': '\r\r\nFirewall/VPN Router 00000# '}
+command:  
+{'matched': True, 'pattern': '\\n[^\\n]+[^\\)]# ', 'data': '\r\r\nFirewall/VPN Router 00000# '}
+command:  exit
+{'matched': True, 'pattern': '\\n[^\\n]+[^\\)]# ', 'data': 'Firewall/VPN Router 00000# '}
+
+ ---- dut close session !!! ----
+
+ ---- dut log out finish!!! ----
+
+1 feature passed, 0 failed, 0 skipped
+1 scenario passed, 0 failed, 0 skipped
+12 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m46.105s
+```

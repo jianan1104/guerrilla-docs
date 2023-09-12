@@ -78,12 +78,24 @@ const sidebars = {
             },
             {
               type: "doc",
-              id: "getting-started/setup-topology/QEMU-KVM",
+              id: "getting-started/setup-topology/qemu-kvm",
               label: "Setup for QEMU/KVM",
+              className: "docpage-sidebar-item",
+            },
+            {
+              type: "doc",
+              id: "getting-started/setup-topology/test-network",
+              label: "Test Network Topology",
               className: "docpage-sidebar-item",
             }
           ],
-        }
+        },
+        {
+          type: "doc",
+          id: "getting-started/first-test-case",
+          label: "First Test Case",
+          className: "docpage-sidebar-item",
+        },
       ],
     },
     
